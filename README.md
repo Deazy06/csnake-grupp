@@ -2,8 +2,8 @@
 
 - [x] Få det att funka
 - [x] Huvudet blir stort `O`, kroppen lilla `o`
-- [ ] Slumpa ut mat (inte på ormen, inte utanför spelplanen)
-- [ ] Poängtext under spelet
-- [x] Collision detection
-- [ ] Ger poäng
+- [x] Slumpa ut mat (inte på ormen, inte utanför spelplanen)
+- [x] Poängtext under spelet
+- [ ] Collision detection
+- [x] Ger poäng
 - [x] Masken växer
