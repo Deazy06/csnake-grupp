@@ -52,7 +52,7 @@ typedef struct{
 #define clrscr() printf("\e[1;1H\e[2J")
 
 void gotoxy(int x,int y){
-    printf("%c[%d;%df",0x1B,y,x);
+    printf("%c[%d;%df", 0x1B, y,x);
 }
 
 void foodxy(int x,int y){
@@ -78,7 +78,7 @@ void drawBoundaries(){
 
 void drawSnake(Snake snake, char c){
     gotoxy(snake.X,snake.Y);
-    printf("%c",c);
+    printf("O");
 }
 
 void clearSnake(Snake snake){
@@ -131,7 +131,22 @@ void moveSnake(Snake *snake,KeyboardDir direction){
         else snake->X++;
     }
 }
+int hitsWall(Snake snake, KeyboardDir direction){
+    if(direction == KeyboardDir_Up    && snake.Y - 1 < 2)       return 1;
+    if(direction == KeyboardDir_Down  && snake.Y + 1 > ROWS+1)  return 1;
+    if(direction == KeyboardDir_Left  && snake.X - 1 < 2)       return 1;
+    if(direction == KeyboardDir_Right && snake.X + 1 > COLS+1)  return 1;
+    return 0;
+}
+int hitsSelf(Snake body[], int length, KeyboardDir direction){
+    Snake next = body[0];
+    moveSnake(&next, direction);
 
+    for(int i = 1; i < length; i++){
+        if(body[i].X == next.X && body[i].Y == next.Y) return 1;
+    }
+    return 0;
+}
 void random_pos(Food *food) {
     
     int minX = 2;
@@ -197,11 +212,14 @@ int main(){
         else if(ch == 'a') direction = KeyboardDir_Left;
         else if(ch == 'd') direction = KeyboardDir_Right;
 
-        for(int i = length - 1; i > 0; i--){
-            body[i] = body[i - 1];  // kroppen följer efter
-        }
+        if (hitsWall(body[0], direction)) break; // collision wall detector
+        if(hitsSelf(body, length, direction)) break; // collision body detector
 
-        moveSnake(&body[0], direction);
+        for (int i = length - 1; i > 0; i--) {
+            body[i] = body[i - 1];
+        }
+        
+        moveSnake(&body[0], direction); // move the snake in the current direction
 
         for(int i = 1; i < length; i++){
             drawSnake(body[i], 'o');
@@ -221,5 +239,7 @@ int main(){
         }
         msleep(250);
     }
-    return 0;
+    gotoxy(1, ROWS+4);
+    printf("Game over!\n");
+    return 1;
 }
