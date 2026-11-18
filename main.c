@@ -133,16 +133,20 @@ int main(){
     clrscr();
     hideCursor();
     drawBoundaries(1);
+
+    KeyboardDir direction = KeyboardDir_Right;
+
     while(1){
         //clrscr();
         //drawBoundaries(1);
         clearSnake(snake);
         gotoxy(0,0);
         char ch = getNextKeyboardAction();
-        if(ch == 'u') moveSnake(&snake,KeyboardDir_Up);
-        else if(ch == 'd') moveSnake(&snake,KeyboardDir_Down);
-        else if(ch == 'l') moveSnake(&snake,KeyboardDir_Left);
-        else if(ch == 'r') moveSnake(&snake,KeyboardDir_Right);
+        if(ch == 'w') direction = KeyboardDir_Up;
+        else if(ch == 's') direction = KeyboardDir_Down;
+        else if(ch == 'a') direction = KeyboardDir_Left;
+        else if(ch == 'd') direction = KeyboardDir_Right;
+        moveSnake(&snake, direction);
         drawSnake(snake);
         msleep(250);
     }
