@@ -145,13 +145,18 @@ int main(){
     while(1){
         //clrscr();
         //drawBoundaries(1);
-        clearSnake(body[0]);
+        clearSnake(body[length-1]); // clear the last segment of the snake
         gotoxy(0,0);
         char ch = getNextKeyboardAction();
         if(ch == 'w') direction = KeyboardDir_Up; // update the direction based on user input
         else if(ch == 's') direction = KeyboardDir_Down;
         else if(ch == 'a') direction = KeyboardDir_Left;
         else if(ch == 'd') direction = KeyboardDir_Right;
+        
+        for (int i = length - 1; i > 0; i--) {
+            body[i] = body[i - 1]; 
+        }
+
         moveSnake(&body[0], direction); // move the snake in the current direction
 
         for(int i = 1; i < length; i++){
