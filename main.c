@@ -126,9 +126,16 @@ void moveSnake(Snake *snake,KeyboardDir direction){
 }
 
 int main(){
-    Snake snake;
-    snake.X = 5; 
-    snake.Y = 5;
+    Snake body [100];
+    int length = 6;
+    body[0].X = 10;
+    body[0].Y = 10;
+
+    for(int i = 1; i < length; i++){
+        body[i].X = body[i-1].X - 1;
+        body[i].Y = body[i-1].Y;
+    }
+
     clrscr();
     hideCursor();
     drawBoundaries(1);
@@ -138,17 +145,24 @@ int main(){
     while(1){
         //clrscr();
         //drawBoundaries(1);
-        clearSnake(snake);
+        clearSnake(body[length-1]); // clear the last segment of the snake
         gotoxy(0,0);
         char ch = getNextKeyboardAction();
         if(ch == 'w') direction = KeyboardDir_Up; // update the direction based on user input
         else if(ch == 's') direction = KeyboardDir_Down;
         else if(ch == 'a') direction = KeyboardDir_Left;
         else if(ch == 'd') direction = KeyboardDir_Right;
-        moveSnake(&snake, direction); // move the snake in the current direction
-        drawSnake(snake);
+        for (int i = length - 1; i > 0; i--) {
+            body[i] = body[i - 1];
+        }
+
+        moveSnake(&body[0], direction); // move the snake in the current direction
+
+        for(int i = 1; i < length; i++){
+            drawSnake(body[i]);
+        }
+        drawSnake(body[0]);
         msleep(250);
     }
     return 1;
 }
-
