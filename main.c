@@ -1,16 +1,15 @@
-
 #include <stdio.h>
 #include <time.h>
 #include <math.h>
 #include <stdlib.h>
-#include <windows.h>
+#include <unistd.h>
 #include <conio.h>
 
 #include <time.h>
 #include <errno.h>    
 
 void hideCursor(){
-    printf("\x1b[?25l");
+    printf("\e[?25l");
 }
 
 /* msleep(): Sleep for the requested number of milliseconds. */
@@ -70,7 +69,7 @@ void drawBoundaries(){
 
 void drawSnake(Snake snake){
     gotoxy(snake.X,snake.Y);
-    printf("@");
+    printf("O");
 }
 
 void clearSnake(Snake snake){
@@ -125,27 +124,38 @@ void moveSnake(Snake *snake,KeyboardDir direction){
 
 
 }
-
+int hitsWall(Snake snake, KeyboardDir direction){
+    if(direction == KeyboardDir_Up    && snake.Y - 1 < 2)       return 1;
+    if(direction == KeyboardDir_Down  && snake.Y + 1 > ROWS+1)  return 1;
+    if(direction == KeyboardDir_Left  && snake.X - 1 < 2)       return 1;
+    if(direction == KeyboardDir_Right && snake.X + 1 > COLS+1)  return 1;
+    return 0;
+}
 int main(){
     Snake snake;
     snake.X = 5; 
     snake.Y = 5;
     clrscr();
     hideCursor();
-    drawBoundaries(1);
+    drawBoundaries();
     while(1){
         //clrscr();
         //drawBoundaries(1);
         clearSnake(snake);
         gotoxy(0,0);
         char ch = getNextKeyboardAction();
-        if(ch == 'u') moveSnake(&snake,KeyboardDir_Up);
-        else if(ch == 'd') moveSnake(&snake,KeyboardDir_Down);
-        else if(ch == 'l') moveSnake(&snake,KeyboardDir_Left);
-        else if(ch == 'r') moveSnake(&snake,KeyboardDir_Right);
+        if(ch == 'w' && hitsWall(snake, KeyboardDir_Up))    break;
+        if(ch == 's' && hitsWall(snake, KeyboardDir_Down))  break;
+        if(ch == 'a' && hitsWall(snake, KeyboardDir_Left))  break;
+        if(ch == 'd' && hitsWall(snake, KeyboardDir_Right)) break;
+        if(ch == 'w') moveSnake(&snake,KeyboardDir_Up);
+        else if(ch == 's') moveSnake(&snake,KeyboardDir_Down);
+        else if(ch == 'a') moveSnake(&snake,KeyboardDir_Left);
+        else if(ch == 'd') moveSnake(&snake,KeyboardDir_Right);
         drawSnake(snake);
         msleep(250);
     }
+    gotoxy(1, ROWS+4);
+    printf("Game over! Du krockade med THE WALL.\n");
     return 1;
 }
-
