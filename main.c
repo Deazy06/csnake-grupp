@@ -67,9 +67,9 @@ void drawBoundaries(){
 }
 
 
-void drawSnake(Snake snake){
+void drawSnake(Snake snake, char c){
     gotoxy(snake.X,snake.Y);
-    printf("@");
+    printf("%c",c);
 }
 
 void clearSnake(Snake snake){
@@ -159,9 +159,9 @@ int main(){
         moveSnake(&body[0], direction); // move the snake in the current direction
 
         for(int i = 1; i < length; i++){
-            drawSnake(body[i]);
+            drawSnake(body[i], 'o');
         }
-        drawSnake(body[0]);
+        drawSnake(body[0], '0');
         msleep(250);
     }
     return 1;
