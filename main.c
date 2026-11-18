@@ -46,7 +46,7 @@ typedef struct{
 
 #define clrscr() printf("\e[1;1H\e[2J")
 void gotoxy(int x,int y){
-    printf("%c[%d;%df",0x1B,y,x);
+    printf("%c[%d;%df", 0x1B, y,x);
 }
 
 
@@ -67,7 +67,7 @@ void drawBoundaries(){
 }
 
 
-void drawSnake(Snake snake){
+void drawSnake(Snake snake, char c){
     gotoxy(snake.X,snake.Y);
     printf("O");
 }
@@ -131,31 +131,59 @@ int hitsWall(Snake snake, KeyboardDir direction){
     if(direction == KeyboardDir_Right && snake.X + 1 > COLS+1)  return 1;
     return 0;
 }
+int hitsSelf(Snake body[], int length, KeyboardDir direction){
+    Snake next = body[0];
+    moveSnake(&next, direction);
+
+    for(int i = 1; i < length; i++){
+        if(body[i].X == next.X && body[i].Y == next.Y) return 1;
+    }
+    return 0;
+}
 int main(){
-    Snake snake;
-    snake.X = 5; 
-    snake.Y = 5;
+    Snake body [100];
+    int length = 6;
+    body[0].X = 10;
+    body[0].Y = 10;
+
+    for(int i = 1; i < length; i++){
+        body[i].X = body[i-1].X - 1;
+        body[i].Y = body[i-1].Y;
+    }
+
     clrscr();
     hideCursor();
     drawBoundaries();
+
+    KeyboardDir direction = KeyboardDir_Right; // store the current direction of the snake
+
     while(1){
         //clrscr();
         //drawBoundaries(1);
-        clearSnake(snake);
+        clearSnake(body[length-1]); // clear the last segment of the snake
         gotoxy(0,0);
         char ch = getNextKeyboardAction();
-        if(ch == 'w' && hitsWall(snake, KeyboardDir_Up))    break;
-        if(ch == 's' && hitsWall(snake, KeyboardDir_Down))  break;
-        if(ch == 'a' && hitsWall(snake, KeyboardDir_Left))  break;
-        if(ch == 'd' && hitsWall(snake, KeyboardDir_Right)) break;
-        if(ch == 'w') moveSnake(&snake,KeyboardDir_Up);
-        else if(ch == 's') moveSnake(&snake,KeyboardDir_Down);
-        else if(ch == 'a') moveSnake(&snake,KeyboardDir_Left);
-        else if(ch == 'd') moveSnake(&snake,KeyboardDir_Right);
-        drawSnake(snake);
+        if(ch == 'w') direction = KeyboardDir_Up; // update the direction based on user input
+        else if(ch == 's') direction = KeyboardDir_Down;
+        else if(ch == 'a') direction = KeyboardDir_Left;
+        else if(ch == 'd') direction = KeyboardDir_Right;
+
+        if (hitsWall(body[0], direction)) break; // collision wall detector
+        if(hitsSelf(body, length, direction)) break; // collision body detector
+
+        for (int i = length - 1; i > 0; i--) {
+            body[i] = body[i - 1];
+        }
+        
+        moveSnake(&body[0], direction); // move the snake in the current direction
+
+        for(int i = 1; i < length; i++){
+            drawSnake(body[i], 'o');
+        }
+        drawSnake(body[0], '0');
         msleep(250);
     }
     gotoxy(1, ROWS+4);
-    printf("Game over! Du krockade med THE WALL.\n");
+    printf("Game over!\n");
     return 1;
 }
