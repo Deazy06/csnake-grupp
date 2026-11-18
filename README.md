@@ -6,5 +6,4 @@
 - [ ] Poängtext under spelet
 - [x] Collision detection
 - [ ] Ger poäng
-- [ ] Slumpa ut ny mat
 - [x] Masken växer
