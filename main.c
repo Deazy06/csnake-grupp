@@ -167,7 +167,6 @@ int main(){
     srand(time(NULL));
     Food food;
     Snake body [100];
-    Snake snake;
     int length = 6;
     body[0].X = 10;
     body[0].Y = 10;
@@ -205,7 +204,8 @@ int main(){
             drawSnake(body[i], 'o');
         }
         drawSnake(body[0], '0');
-        if(eatfood(snake, food)) {
+        if(eatfood(body[0], food)) {
+            if(length < 100) length++;
             random_pos(&food); 
             drawfood(food);             
         }
