@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include <windows.h>
 #include <conio.h>
 #include <stdbool.h>
 
@@ -10,7 +10,7 @@
 #include <errno.h>    
 
 void hideCursor(){
-    printf("\e[?25l");
+    printf("\x1b[?25l");
 }
 
 /* msleep(): Sleep for the requested number of milliseconds. */
