@@ -1,9 +1,9 @@
 #include <stdio.h>
+#include <time.h>
 #include <math.h>
 #include <stdlib.h>
 #include <windows.h>
 #include <conio.h>
-#include <stdbool.h>
 
 #include <time.h>
 #include <errno.h>    
@@ -43,26 +43,16 @@ typedef struct{
     int Y;
 }Snake;
 
-typedef struct{
-    int X;
-    int Y;
-}Food;
-
 
 #define clrscr() printf("\e[1;1H\e[2J")
-
 void gotoxy(int x,int y){
-    printf("%c[%d;%df",0x1B,y,x);
-}
-
-void foodxy(int x,int y){
     printf("%c[%d;%df",0x1B,y,x);
 }
 
 
 
 void drawBoundaries(){
-    for(int row = 0; row < ROWS+2; row++){
+    for(int row = 0; row < ROWS+2;row++){
         for(int col = 0; col < COLS+2; col++){
             if(row == 0 || row == ROWS+1 || col == 0 || col == COLS+1){
                 printf("%c",WALL);         
@@ -71,7 +61,8 @@ void drawBoundaries(){
                 printf(" ");
             }
         }
-        printf("\n");        
+        printf("\n");
+        
     }
 }
 
@@ -130,38 +121,9 @@ void moveSnake(Snake *snake,KeyboardDir direction){
         if(snake->X == COLS+1) snake->X = 2;
         else snake->X++;
     }
+
+
 }
-
-void random_pos(Food *food) {
-    
-    int minX = 2;
-    int maxX = COLS + 1; 
-    int minY = 2;
-    int maxY = ROWS + 1;
-
-    food->X = minX + rand() % (maxX - minX + 1);
-    food->Y = minY + rand() % (maxY - minY + 1);
-}
-
-void drawfood(Food food){
-    foodxy(food.X,food.Y);
-    printf("*");
-}
-
-void clearfood(Food food){
-    foodxy(food.X,food.Y);
-    printf(" ");
-}
-
-bool eatfood (Snake snake, Food food) {
-    if (food.X == snake.X && food.Y == snake.Y) {
-    return true;
-    } else {
-        return false;
-    }
-}
-
-
 
 int main(){
     Snake body [100];
