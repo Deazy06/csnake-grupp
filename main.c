@@ -134,7 +134,7 @@ int main(){
     hideCursor();
     drawBoundaries(1);
 
-    KeyboardDir direction = KeyboardDir_Right;
+    KeyboardDir direction = KeyboardDir_Right; // store the current direction of the snake
 
     while(1){
         //clrscr();
@@ -142,11 +142,11 @@ int main(){
         clearSnake(snake);
         gotoxy(0,0);
         char ch = getNextKeyboardAction();
-        if(ch == 'w') direction = KeyboardDir_Up;
+        if(ch == 'w') direction = KeyboardDir_Up; // update the direction based on user input
         else if(ch == 's') direction = KeyboardDir_Down;
         else if(ch == 'a') direction = KeyboardDir_Left;
         else if(ch == 'd') direction = KeyboardDir_Right;
-        moveSnake(&snake, direction);
+        moveSnake(&snake, direction); // move the snake in the current direction
         drawSnake(snake);
         msleep(250);
     }
