@@ -166,8 +166,9 @@ bool eatfood (Snake snake, Food food) {
 int main(){
     srand(time(NULL));
     Food food;
-    Snake body [100];
-    int length = 6;
+    Snake body[100];
+    int length = 1;
+    int score = 0;
     body[0].X = 10;
     body[0].Y = 10;
 
@@ -182,34 +183,43 @@ int main(){
     random_pos(&food);
     drawfood(food);
 
-    KeyboardDir direction = KeyboardDir_Right; // store the current direction of the snake
+    gotoxy(1, ROWS+3);          // raden under spelplanen
+    printf("Poang: %d", score);
+
+    KeyboardDir direction = KeyboardDir_Right;
 
     while(1){
-        //clrscr();
-        //drawBoundaries(1);
-        clearSnake(body[length-1]); // clear the last segment of the snake
+        clearSnake(body[length-1]); // sudda svansen
         gotoxy(0,0);
         char ch = getNextKeyboardAction();
-        if(ch == 'w') direction = KeyboardDir_Up; // update the direction based on user input
+        if(ch == 'w') direction = KeyboardDir_Up;
         else if(ch == 's') direction = KeyboardDir_Down;
         else if(ch == 'a') direction = KeyboardDir_Left;
         else if(ch == 'd') direction = KeyboardDir_Right;
-        for (int i = length - 1; i > 0; i--) {
-            body[i] = body[i - 1];
+
+        for(int i = length - 1; i > 0; i--){
+            body[i] = body[i - 1];  // kroppen följer efter
         }
 
-        moveSnake(&body[0], direction); // move the snake in the current direction
+        moveSnake(&body[0], direction);
 
         for(int i = 1; i < length; i++){
             drawSnake(body[i], 'o');
         }
-        drawSnake(body[0], '0');
-        if(eatfood(body[0], food)) {
-            if(length < 100) length++;
-            random_pos(&food); 
-            drawfood(food);             
+        drawSnake(body[0], 'O');
+
+        if(eatfood(body[0], food)){
+            if(length < 100){
+                body[length] = body[length-1]; // ny del startar på svansen
+                length++;
+            }
+            score += 10;
+            gotoxy(1, ROWS+3);
+            printf("Poang: %d", score);
+            random_pos(&food);
+            drawfood(food);
         }
         msleep(250);
     }
-    return 1;
+    return 0;
 }
