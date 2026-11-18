@@ -138,7 +138,7 @@ int main(){
 
     clrscr();
     hideCursor();
-    drawBoundaries(1);
+    drawBoundaries();
 
     KeyboardDir direction = KeyboardDir_Right; // store the current direction of the snake
 
