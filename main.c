@@ -128,7 +128,7 @@ void moveSnake(Snake *snake,KeyboardDir direction){
 int main(){
     Snake body [100];
     int length = 6;
-    body[0].X = 10; 
+    body[0].X = 10;
     body[0].Y = 10;
 
     for(int i = 1; i < length; i++){
@@ -152,9 +152,8 @@ int main(){
         else if(ch == 's') direction = KeyboardDir_Down;
         else if(ch == 'a') direction = KeyboardDir_Left;
         else if(ch == 'd') direction = KeyboardDir_Right;
-        
         for (int i = length - 1; i > 0; i--) {
-            body[i] = body[i - 1]; 
+            body[i] = body[i - 1];
         }
 
         moveSnake(&body[0], direction); // move the snake in the current direction
@@ -162,10 +161,8 @@ int main(){
         for(int i = 1; i < length; i++){
             drawSnake(body[i]);
         }
-
         drawSnake(body[0]);
         msleep(250);
     }
     return 1;
 }
-
